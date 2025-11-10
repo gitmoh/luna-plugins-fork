@@ -1,0 +1,10 @@
+{
+	"name": "BearerTokenAuth",
+	"description": "Authenticate using a bearer token from a JSON file",
+	"homepage": "https://github.com/Inrixia/luna-plugins#BearerTokenAuth",
+	"author": {
+		"name": "Luna Plugins",
+		"url": "https://github.com/Inrixia/luna-plugins"
+	},
+	"exports": "./src/index.ts"
+}
