@@ -41,7 +41,7 @@ export class TokenService {
 			// TIDAL's token refresh endpoint
 			// TODO: Find the correct client_id using findModuleProperty or allow configuration in settings
 			// For now, you may need to manually refresh tokens by updating the JSON file
-			const response = await ftch("https://auth.tidal.com/v1/oauth2/token", {
+			const data = await ftch.json<any>("https://auth.tidal.com/v1/oauth2/token", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",
@@ -50,14 +50,9 @@ export class TokenService {
 					grant_type: "refresh_token",
 					refresh_token: storage.tokens.refresh_token,
 					// client_id: "...", // May be required depending on TIDAL's OAuth configuration
-				}),
+				}).toString(),
 			});
 
-			if (!response.ok) {
-				throw new Error(`Token refresh failed: ${response.statusText}`);
-			}
-
-			const data = await response.json();
 			const newTokenData: TokenData = {
 				access_token: data.access_token,
 				refresh_token: data.refresh_token || storage.tokens.refresh_token,

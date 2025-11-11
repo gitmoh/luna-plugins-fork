@@ -8,18 +8,12 @@ export class AccountService {
 	 */
 	public static async fetchAccountInfo(accessToken: string): Promise<AccountInfo | null> {
 		try {
-			const response = await ftch("https://api.tidal.com/v1/sessions", {
+			const data = await ftch.json<any>("https://api.tidal.com/v1/sessions", {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 					"Accept": "application/json",
 				},
 			});
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch account info: ${response.statusText}`);
-			}
-
-			const data = await response.json();
 
 			const accountInfo: AccountInfo = {
 				userId: data.userId,
@@ -49,18 +43,12 @@ export class AccountService {
 	 */
 	public static async fetchSubscriptionInfo(userId: number, accessToken: string): Promise<SubscriptionInfo | null> {
 		try {
-			const response = await ftch(`https://api.tidal.com/v1/users/${userId}/subscription`, {
+			const data = await ftch.json<any>(`https://api.tidal.com/v1/users/${userId}/subscription`, {
 				headers: {
 					Authorization: `Bearer ${accessToken}`,
 					"Accept": "application/json",
 				},
 			});
-
-			if (!response.ok) {
-				throw new Error(`Failed to fetch subscription info: ${response.statusText}`);
-			}
-
-			const data = await response.json();
 
 			const subscriptionInfo: SubscriptionInfo = {
 				type: data.type || data.subscription?.type,
