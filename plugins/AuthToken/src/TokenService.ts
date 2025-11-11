@@ -1,6 +1,6 @@
 import { ftch } from "@luna/core";
 import type { TokenData } from "./types";
-import { storage } from "./Settings";
+import { storage } from "./storage";
 
 export class TokenService {
 	private static refreshTimeout: NodeJS.Timeout | null = null;

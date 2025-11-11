@@ -1,12 +1,10 @@
 import { Tracer, type LunaUnload } from "@luna/core";
+import { readTokenFile, watchTokenFile } from "./fileReader.native";
+import { storage } from "./storage";
+import { TokenService } from "./TokenService";
 
 export const unloads = new Set<LunaUnload>();
 export const { trace, errSignal } = Tracer("[AuthToken]");
-
-import { readTokenFile, watchTokenFile } from "./fileReader.native";
-import { storage } from "./Settings";
-import { TokenService } from "./TokenService";
-
 export { Settings } from "./Settings";
 
 // Store the original fetch function

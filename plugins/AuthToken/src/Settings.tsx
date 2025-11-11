@@ -1,17 +1,10 @@
-import { ReactiveStore } from "@luna/core";
 import { showOpenDialog } from "@luna/lib.native";
 import { LunaButtonSetting, LunaLink, LunaSettings, LunaTextSetting } from "@luna/ui";
 import React from "react";
 import { errSignal } from ".";
 import { readTokenFile } from "./fileReader.native";
+import { storage } from "./storage";
 import { TokenService } from "./TokenService";
-import type { PluginStorage } from "./types";
-
-export const storage = await ReactiveStore.getPluginStorage<PluginStorage>("AuthToken", {
-	tokenFilePath: undefined,
-	tokens: undefined,
-	lastRefresh: undefined,
-});
 
 export const Settings = () => {
 	const [filePath, setFilePath] = React.useState(storage.tokenFilePath);
