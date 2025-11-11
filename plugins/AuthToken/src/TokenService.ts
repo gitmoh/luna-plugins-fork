@@ -18,11 +18,6 @@ export class TokenService {
 		storage.tokens = tokenData;
 		storage.lastRefresh = Date.now();
 
-		// Schedule automatic refresh if expiry_time is provided
-		if (tokenData.expiry_time) {
-			this.scheduleTokenRefresh(tokenData.expiry_time);
-		}
-
 		// Fetch account information to verify token and show user details
 		if (fetchAccountInfo) {
 			await AccountService.fetchAllAccountData(tokenData.access_token);

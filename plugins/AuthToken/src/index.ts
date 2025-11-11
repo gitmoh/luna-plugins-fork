@@ -112,12 +112,6 @@ const initialize = async () => {
 	}
 };
 
-// Clean up scheduled refresh on unload
-unloads.add(() => {
-	TokenService.clearRefreshSchedule();
-	trace.msg.log("Cleared token refresh schedule");
-});
-
 // Initialize the plugin after a short delay to ensure Luna is ready
 setTimeout(() => {
 	initialize().catch((error) => {

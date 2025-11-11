@@ -68,26 +68,6 @@ export const Settings = () => {
 		}
 	};
 
-	const handleRefreshToken = async () => {
-		try {
-			setIsLoading(true);
-			setStatus("Refreshing token...");
-
-			await TokenService.refreshToken();
-
-			setStatus("Token refreshed successfully!");
-			errSignal!._ = undefined;
-
-			setTimeout(() => setStatus(""), 3000);
-		} catch (error) {
-			const errorMsg = error instanceof Error ? error.message : "Failed to refresh token";
-			setStatus(`Error: ${errorMsg}`);
-			errSignal!._ = errorMsg;
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
 	const handleReloadFile = async () => {
 		if (filePath) {
 			await loadTokensFromFile(filePath);
@@ -118,25 +98,14 @@ export const Settings = () => {
 			</LunaButtonSetting>
 
 			{filePath && (
-				<>
-					<LunaButtonSetting
-						title="Reload Tokens"
-						desc="Reload tokens from the selected file"
-						onClick={handleReloadFile}
-						disabled={isLoading}
-					>
-						Reload
-					</LunaButtonSetting>
-
-					<LunaButtonSetting
-						title="Refresh Token"
-						desc="Use refresh token to get a new access token"
-						onClick={handleRefreshToken}
-						disabled={isLoading || !storage.tokens?.refresh_token}
-					>
-						Refresh Token
-					</LunaButtonSetting>
-				</>
+				<LunaButtonSetting
+					title="Reload Tokens"
+					desc="Reload tokens from the selected file"
+					onClick={handleReloadFile}
+					disabled={isLoading}
+				>
+					Reload
+				</LunaButtonSetting>
 			)}
 
 			{status && (
@@ -200,15 +169,13 @@ export const Settings = () => {
 							access_token: "your_access_token_here",
 							refresh_token: "your_refresh_token_here",
 							expiry_time: 1761278457.441437,
-							client_id: "your_client_id_here",
-							client_secret: "your_client_secret_here (optional)",
 						},
 						null,
 						2
 					)}
 				</pre>
 				<p style={{ marginTop: "10px", fontSize: "11px" }}>
-					<b>Note:</b> client_id is required for automatic token refresh. client_secret may be optional depending on your OAuth setup.
+					<b>Note:</b> Only <b>access_token</b> and <b>refresh_token</b> are required. The token is validated by fetching your account information.
 				</p>
 			</div>
 		</LunaSettings>
