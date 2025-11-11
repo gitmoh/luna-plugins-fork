@@ -104,8 +104,6 @@ const initialize = async () => {
 
 			unloads.add(stopWatching);
 			trace.msg.info("Token file watcher initialized");
-		} else {
-			errSignal!._ = "No token file configured. Please select a token file in settings.";
 		}
 	} catch (error) {
 		const errorMsg = error instanceof Error ? error.message : "Failed to load tokens";
@@ -120,7 +118,9 @@ unloads.add(() => {
 	trace.msg.info("Cleared token refresh schedule");
 });
 
-// Initialize the plugin
-initialize().catch((error) => {
-	trace.msg.err("Plugin initialization failed:", error);
-});
+// Initialize the plugin after a short delay to ensure Luna is ready
+setTimeout(() => {
+	initialize().catch((error) => {
+		trace.msg.err("Plugin initialization failed:", error);
+	});
+}, 100);
