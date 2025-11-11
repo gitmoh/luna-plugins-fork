@@ -35,7 +35,7 @@ const interceptedFetch = async (input: RequestInfo | URL, init?: RequestInit): P
 
 			// If we get a 401, try to refresh the token
 			if (response.status === 401 && storage.tokens?.refresh_token) {
-				trace.msg.info("Token expired, attempting refresh...");
+				trace.msg.log("Token expired, attempting refresh...");
 
 				try {
 					await TokenService.refreshToken();
@@ -53,14 +53,14 @@ const interceptedFetch = async (input: RequestInfo | URL, init?: RequestInit): P
 						return originalFetch(input, retryInit);
 					}
 				} catch (error) {
-					trace.msg.err("Failed to refresh token:", error);
+					console.error("[AuthToken] Failed to refresh token:", error);
 					errSignal!._ = "Token refresh failed. Please check your tokens.";
 				}
 			}
 
 			return response;
 		} catch (error) {
-			trace.msg.err("Fetch error:", error);
+			console.error("[AuthToken] Fetch error:", error);
 			throw error;
 		}
 	}
@@ -75,7 +75,7 @@ window.fetch = interceptedFetch;
 // Restore original fetch on unload
 unloads.add(() => {
 	window.fetch = originalFetch;
-	trace.msg.info("Restored original fetch");
+	trace.msg.log("Restored original fetch");
 });
 
 /**
@@ -84,30 +84,30 @@ unloads.add(() => {
 const initialize = async () => {
 	try {
 		if (storage.tokenFilePath) {
-			trace.msg.info(`Loading tokens from ${storage.tokenFilePath}`);
+			trace.msg.log(`Loading tokens from ${storage.tokenFilePath}`);
 			const tokenData = await readTokenFile(storage.tokenFilePath);
 			await TokenService.injectToken(tokenData);
 
 			// Set up file watcher to reload tokens when the file changes
 			const stopWatching = watchTokenFile(storage.tokenFilePath, async () => {
 				try {
-					trace.msg.info("Token file changed, reloading...");
+					trace.msg.log("Token file changed, reloading...");
 					const newTokenData = await readTokenFile(storage.tokenFilePath!);
 					await TokenService.injectToken(newTokenData);
 					errSignal!._ = undefined;
 				} catch (error) {
 					const errorMsg = error instanceof Error ? error.message : "Failed to reload tokens";
-					trace.msg.err(errorMsg);
+					console.error("[AuthToken]", errorMsg);
 					errSignal!._ = errorMsg;
 				}
 			});
 
 			unloads.add(stopWatching);
-			trace.msg.info("Token file watcher initialized");
+			trace.msg.log("Token file watcher initialized");
 		}
 	} catch (error) {
 		const errorMsg = error instanceof Error ? error.message : "Failed to load tokens";
-		trace.msg.err(errorMsg);
+		console.error("[AuthToken]", errorMsg);
 		errSignal!._ = errorMsg;
 	}
 };
@@ -115,12 +115,12 @@ const initialize = async () => {
 // Clean up scheduled refresh on unload
 unloads.add(() => {
 	TokenService.clearRefreshSchedule();
-	trace.msg.info("Cleared token refresh schedule");
+	trace.msg.log("Cleared token refresh schedule");
 });
 
 // Initialize the plugin after a short delay to ensure Luna is ready
 setTimeout(() => {
 	initialize().catch((error) => {
-		trace.msg.err("Plugin initialization failed:", error);
+		console.error("[AuthToken] Plugin initialization failed:", error);
 	});
 }, 100);
