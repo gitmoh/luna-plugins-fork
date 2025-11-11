@@ -5,4 +5,6 @@ export const storage = await ReactiveStore.getPluginStorage<PluginStorage>("Auth
 	tokenFilePath: undefined,
 	tokens: undefined,
 	lastRefresh: undefined,
+	accountInfo: undefined,
+	subscriptionInfo: undefined,
 });

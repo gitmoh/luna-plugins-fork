@@ -1,6 +1,7 @@
 import { ftch } from "@luna/core";
 import type { TokenData } from "./types";
 import { storage } from "./storage";
+import { AccountService } from "./AccountService";
 
 export class TokenService {
 	private static refreshTimeout: NodeJS.Timeout | null = null;
@@ -8,7 +9,7 @@ export class TokenService {
 	/**
 	 * Injects the access token into the app's authentication system
 	 */
-	public static async injectToken(tokenData: TokenData): Promise<void> {
+	public static async injectToken(tokenData: TokenData, fetchAccountInfo: boolean = true): Promise<void> {
 		if (!tokenData.access_token) {
 			throw new Error("No access token available");
 		}
@@ -20,6 +21,11 @@ export class TokenService {
 		// Schedule automatic refresh if expiry_time is provided
 		if (tokenData.expiry_time) {
 			this.scheduleTokenRefresh(tokenData.expiry_time);
+		}
+
+		// Fetch account information to verify token and show user details
+		if (fetchAccountInfo) {
+			await AccountService.fetchAllAccountData(tokenData.access_token);
 		}
 	}
 

@@ -153,6 +153,42 @@ export const Settings = () => {
 				</div>
 			)}
 
+			{storage.accountInfo && (
+				<div style={{ padding: "10px", marginTop: "10px", borderTop: "1px solid #333" }}>
+					<div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "8px" }}>Account Information</div>
+					<div style={{ fontSize: "12px", opacity: 0.9 }}>
+						{storage.accountInfo.username && <div>Username: {storage.accountInfo.username}</div>}
+						{(storage.accountInfo.firstName || storage.accountInfo.lastName) && (
+							<div>
+								Name: {storage.accountInfo.firstName} {storage.accountInfo.lastName}
+							</div>
+						)}
+						{storage.accountInfo.email && <div>Email: {storage.accountInfo.email}</div>}
+						{storage.accountInfo.userId && <div>User ID: {storage.accountInfo.userId}</div>}
+						{storage.accountInfo.countryCode && <div>Country: {storage.accountInfo.countryCode}</div>}
+						{storage.accountInfo.created && <div>Created: {new Date(storage.accountInfo.created).toLocaleDateString()}</div>}
+					</div>
+				</div>
+			)}
+
+			{storage.subscriptionInfo && (
+				<div style={{ padding: "10px", marginTop: "10px", borderTop: "1px solid #333" }}>
+					<div style={{ fontSize: "14px", fontWeight: "bold", marginBottom: "8px" }}>Subscription Information</div>
+					<div style={{ fontSize: "12px", opacity: 0.9 }}>
+						{storage.subscriptionInfo.type && <div>Plan: {storage.subscriptionInfo.type}</div>}
+						{storage.subscriptionInfo.status && <div>Status: {storage.subscriptionInfo.status}</div>}
+						{storage.subscriptionInfo.highestSoundQuality && <div>Quality: {storage.subscriptionInfo.highestSoundQuality}</div>}
+						{storage.subscriptionInfo.premiumAccess !== undefined && (
+							<div>Premium Access: {storage.subscriptionInfo.premiumAccess ? "Yes" : "No"}</div>
+						)}
+						{storage.subscriptionInfo.paymentType && <div>Payment: {storage.subscriptionInfo.paymentType}</div>}
+						{storage.subscriptionInfo.startDate && <div>Start Date: {new Date(storage.subscriptionInfo.startDate).toLocaleDateString()}</div>}
+						{storage.subscriptionInfo.validUntil && <div>Valid Until: {new Date(storage.subscriptionInfo.validUntil).toLocaleDateString()}</div>}
+						{storage.subscriptionInfo.endDate && <div>End Date: {new Date(storage.subscriptionInfo.endDate).toLocaleDateString()}</div>}
+					</div>
+				</div>
+			)}
+
 			<div style={{ marginTop: "20px", padding: "10px", opacity: 0.7, fontSize: "12px" }}>
 				<p>
 					<b>Token file format:</b>
