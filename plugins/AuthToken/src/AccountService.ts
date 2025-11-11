@@ -15,6 +15,9 @@ export class AccountService {
 				},
 			});
 
+			// Log full response to see what data is available
+			console.log("[AuthToken] Full sessions response:", JSON.stringify(data, null, 2));
+
 			const accountInfo: AccountInfo = {
 				userId: data.userId,
 				username: data.user?.username,
@@ -29,6 +32,20 @@ export class AccountService {
 				gender: data.user?.gender,
 				dateOfBirth: data.user?.dateOfBirth,
 			};
+
+			// Check if client_id is in the response
+			if (data.client?.id || data.clientId || data.client_id) {
+				const clientId = data.client?.id || data.clientId || data.client_id;
+				console.log("[AuthToken] Found client_id in response:", clientId);
+
+				// Store it in tokens if we have tokens
+				if (storage.tokens) {
+					storage.tokens = {
+						...storage.tokens,
+						client_id: clientId,
+					};
+				}
+			}
 
 			storage.accountInfo = accountInfo;
 			return accountInfo;
