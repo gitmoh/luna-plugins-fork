@@ -37,20 +37,29 @@ export class TokenService {
 			throw new Error("No refresh token available");
 		}
 
+		if (!storage.tokens?.client_id) {
+			throw new Error("client_id is required for token refresh. Please add it to your token file.");
+		}
+
 		try {
-			// TIDAL's token refresh endpoint
-			// TODO: Find the correct client_id using findModuleProperty or allow configuration in settings
-			// For now, you may need to manually refresh tokens by updating the JSON file
+			// Build refresh token request params
+			const params: Record<string, string> = {
+				grant_type: "refresh_token",
+				refresh_token: storage.tokens.refresh_token,
+				client_id: storage.tokens.client_id,
+			};
+
+			// Add client_secret if provided
+			if (storage.tokens.client_secret) {
+				params.client_secret = storage.tokens.client_secret;
+			}
+
 			const data = await ftch.json<any>("https://auth.tidal.com/v1/oauth2/token", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",
 				},
-				body: new URLSearchParams({
-					grant_type: "refresh_token",
-					refresh_token: storage.tokens.refresh_token,
-					// client_id: "...", // May be required depending on TIDAL's OAuth configuration
-				}).toString(),
+				body: new URLSearchParams(params).toString(),
 			});
 
 			const newTokenData: TokenData = {
@@ -58,6 +67,8 @@ export class TokenService {
 				refresh_token: data.refresh_token || storage.tokens.refresh_token,
 				expiry_time: data.expiry_time,
 				token_type: data.token_type,
+				client_id: storage.tokens.client_id,
+				client_secret: storage.tokens.client_secret,
 			};
 
 			await this.injectToken(newTokenData);

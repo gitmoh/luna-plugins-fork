@@ -3,6 +3,8 @@ export interface TokenData {
 	refresh_token: string;
 	expiry_time?: number; // Unix timestamp when token expires
 	token_type?: string; // Usually "Bearer"
+	client_id?: string; // OAuth client ID (required for token refresh)
+	client_secret?: string; // OAuth client secret (if required)
 }
 
 export interface AccountInfo {

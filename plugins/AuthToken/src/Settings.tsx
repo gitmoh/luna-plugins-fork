@@ -200,11 +200,16 @@ export const Settings = () => {
 							access_token: "your_access_token_here",
 							refresh_token: "your_refresh_token_here",
 							expiry_time: 1761278457.441437,
+							client_id: "your_client_id_here",
+							client_secret: "your_client_secret_here (optional)",
 						},
 						null,
 						2
 					)}
 				</pre>
+				<p style={{ marginTop: "10px", fontSize: "11px" }}>
+					<b>Note:</b> client_id is required for automatic token refresh. client_secret may be optional depending on your OAuth setup.
+				</p>
 			</div>
 		</LunaSettings>
 	);
